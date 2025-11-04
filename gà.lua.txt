@@ -306,4 +306,4 @@ function CheckLevel()
             NameMon = "Bandit";
             CFrameQ = CFrame.new(1060.9383544922, 16.455066680908, 1547.7841796875);
             CFrameMon = CFrame.new(1038.5533447266, 41.296249389648, 1576.5098876953);
-        elseif ((v197 == 10) or (v197 <= 14) or (SelectMonster == "Monkey"))
+        elseif ((v197 == 10) or (v197 <= 14) or (SelectMonster == "Monkey")) then
