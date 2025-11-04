@@ -1,62 +1,242 @@
 -- discord.gg/tboyroblox
 
--- Loader Screen Cao Cấp
-shared.LoaderTitle = "gà gaming Hub - VIP Edition"
+-- CHỈ THAY ĐỔI PHẦN NÀY - GIỮ NGUYÊN TÍNH NĂNG
+shared.LoaderTitle = "gà gaming Hub - VIP Edition";
 shared.LoaderColors = {
     Main = Color3.fromRGB(10, 10, 20),
     Topic = Color3.fromRGB(200, 200, 200),
     Title = Color3.fromRGB(255, 215, 0),
     LoaderBackground = Color3.fromRGB(30, 30, 40),
     LoaderSplash = Color3.fromRGB(255, 215, 0)
-}
-
--- Tạo loader đơn giản
-local screenGui = Instance.new("ScreenGui", game.CoreGui)
-local mainFrame = Instance.new("Frame", screenGui)
-mainFrame.Size = UDim2.new(0, 400, 0, 150)
-mainFrame.Position = UDim2.new(0.5, -200, 0.5, -75)
-mainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
-mainFrame.BorderSizePixel = 0
-
-local UICorner = Instance.new("UICorner", mainFrame)
-UICorner.CornerRadius = UDim.new(0, 12)
-
-local title = Instance.new("TextLabel", mainFrame)
-title.Text = "gà gaming Hub - VIP Edition"
-title.TextColor3 = Color3.fromRGB(255, 215, 0)
-title.Size = UDim2.new(1, 0, 0, 40)
-title.Position = UDim2.new(0, 0, 0, 20)
-title.BackgroundTransparency = 1
-title.Font = Enum.Font.GothamBold
-title.TextSize = 20
-
-local loadingBar = Instance.new("Frame", mainFrame)
-loadingBar.Size = UDim2.new(0.8, 0, 0, 20)
-loadingBar.Position = UDim2.new(0.1, 0, 0.6, 0)
-loadingBar.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-loadingBar.BorderSizePixel = 0
-
-local progressBar = Instance.new("Frame", loadingBar)
-progressBar.Size = UDim2.new(0, 0, 1, 0)
-progressBar.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
-progressBar.BorderSizePixel = 0
-
--- Hiệu ứng loading
-for i = 1, 100 do
-    progressBar.Size = UDim2.new(i/100, 0, 1, 0)
-    wait(0.03)
+};
+shared.LoaderKeyFrames = {
+    [1] = {
+        1,
+        10
+    },
+    [2] = {
+        2,
+        30
+    },
+    [3] = {
+        3,
+        60
+    },
+    [4] = {
+        2,
+        100
+    }
+};
+local v2 = {
+    LoaderData = {
+        Name = shared.LoaderTitle or "A Loader",
+        Colors = shared.LoaderColors or {
+            Main = Color3.fromRGB(0, 0, 0),
+            Topic = Color3.fromRGB(200, 200, 200),
+            Title = Color3.fromRGB(255, 255, 255),
+            LoaderBackground = Color3.fromRGB(40, 40, 40),
+            LoaderSplash = Color3.fromRGB(3, 252, 3)
+        }
+    },
+    Keyframes = shared.LoaderKeyFrames or {
+        [1] = {
+            1,
+            10
+        },
+        [2] = {
+            2,
+            30
+        },
+        [3] = {
+            3,
+            60
+        },
+        [4] = {
+            2,
+            100
+        }
+    }
+};
+local v3 = {
+    [1] = "",
+    [2] = "",
+    [3] = "",
+    [4] = ""
+};
+function TweenObject(v178, v179, v180)
+    game.TweenService:Create(v178, TweenInfo.new(v179, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), v180):Play();
 end
+function CreateObject(v181, v182)
+    local v183 = Instance.new(v181);
+    local v184;
+    for v416, v417 in pairs(v182) do
+        if (v416 ~= "Parent") then
+            v183[v416] = v417;
+        else
+            v184 = v417;
+        end
+    end
+    v183.Parent = v184;
+    return v183;
+end
+local function v4(v186, v187)
+    local v188 = Instance.new("UICorner");
+    v188.CornerRadius = UDim.new(0, v186);
+    v188.Parent = v187;
+end
+local v5 = CreateObject("ScreenGui", {
+    Name = "Core",
+    Parent = game.CoreGui
+});
+local v6 = CreateObject("Frame", {
+    Name = "Main",
+    Parent = v5,
+    BackgroundColor3 = v2.LoaderData.Colors.Main,
+    BorderSizePixel = 0,
+    ClipsDescendants = true,
+    Position = UDim2.new(0.5, 0, 0.5, 0),
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    Size = UDim2.new(0, 0, 0, 0)
+});
+v4(12, v6);
+local v7 = CreateObject("ImageLabel", {
+    Name = "UserImage",
+    Parent = v6,
+    BackgroundTransparency = 1,
+    Image = "rbxassetid://77817527501053",
+    Position = UDim2.new(0, 15, 0, 10),
+    Size = UDim2.new(0, 50, 0, 50)
+});
+v4(25, v7);
+local v8 = CreateObject("TextLabel", {
+    Name = "UserName",
+    Parent = v6,
+    BackgroundTransparency = 1,
+    Text = "Youtube: Gà gaming",
+    Position = UDim2.new(0, 75, 0, 10),
+    Size = UDim2.new(0, 200, 0, 50),
+    Font = Enum.Font.GothamBold,
+    TextColor3 = v2.LoaderData.Colors.Title,
+    TextSize = 14,
+    TextXAlignment = Enum.TextXAlignment.Left
+});
+local v9 = CreateObject("TextLabel", {
+    Name = "Top",
+    TextTransparency = 1,
+    Parent = v6,
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+    BackgroundTransparency = 1,
+    Position = UDim2.new(0, 30, 0, 70),
+    Size = UDim2.new(0, 301, 0, 20),
+    Font = Enum.Font.Gotham,
+    Text = "Loader",
+    TextColor3 = v2.LoaderData.Colors.Topic,
+    TextSize = 10,
+    TextXAlignment = Enum.TextXAlignment.Left
+});
+local v10 = CreateObject("TextLabel", {
+    Name = "Title",
+    Parent = v6,
+    TextTransparency = 1,
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+    BackgroundTransparency = 1,
+    Position = UDim2.new(0, 30, 0, 90),
+    Size = UDim2.new(0, 301, 0, 46),
+    Font = Enum.Font.Gotham,
+    RichText = true,
+    Text = "<b>" .. v2.LoaderData.Name .. "</b>",
+    TextColor3 = v2.LoaderData.Colors.Title,
+    TextSize = 14,
+    TextXAlignment = Enum.TextXAlignment.Left
+});
+local v11 = CreateObject("Frame", {
+    Name = "BG",
+    Parent = v6,
+    AnchorPoint = Vector2.new(0.5, 0),
+    BackgroundTransparency = 1,
+    BackgroundColor3 = v2.LoaderData.Colors.LoaderBackground,
+    BorderSizePixel = 0,
+    Position = UDim2.new(0.5, 0, 0, 70),
+    Size = UDim2.new(0.8500000238418579, 0, 0, 24)
+});
+v4(8, v11);
+local v12 = CreateObject("Frame", {
+    Name = "Progress",
+    Parent = v11,
+    BackgroundColor3 = v2.LoaderData.Colors.LoaderSplash,
+    BackgroundTransparency = 1,
+    BorderSizePixel = 0,
+    Size = UDim2.new(0, 0, 0, 24)
+});
+v4(8, v12);
+local v13 = CreateObject("TextLabel", {
+    Name = "StepLabel",
+    Parent = v6,
+    BackgroundTransparency = 1,
+    Position = UDim2.new(0.5, 0, 1, - 25),
+    Size = UDim2.new(1, - 20, 0, 20),
+    Font = Enum.Font.Gotham,
+    Text = "",
+    TextColor3 = v2.LoaderData.Colors.Topic,
+    TextSize = 14,
+    TextXAlignment = Enum.TextXAlignment.Center,
+    AnchorPoint = Vector2.new(0.5, 0.5)
+});
+function UpdateStepText(v191)
+    v13.Text = v3[v191] or "" ;
+end
+function UpdatePercentage(v193, v194)
+    TweenObject(v12, 0.5, {
+        Size = UDim2.new(v193 / 100, 0, 0, 24)
+    });
+    UpdateStepText(v194);
+end
+TweenObject(v6, 0.25, {
+    Size = UDim2.new(0, 346, 0, 121)
+});
+wait();
+TweenObject(v9, 0.5, {
+    TextTransparency = 0
+});
+TweenObject(v10, 0.5, {
+    TextTransparency = 0
+});
+TweenObject(v11, 0.5, {
+    BackgroundTransparency = 0
+});
+TweenObject(v12, 0.5, {
+    BackgroundTransparency = 0
+});
+for v195, v196 in pairs(v2.Keyframes) do
+    wait(v196[1]);
+    UpdatePercentage(v196[2], v195);
+end
+UpdatePercentage(100, 4);
+TweenObject(v9, 0.5, {
+    TextTransparency = 1
+});
+TweenObject(v10, 0.5, {
+    TextTransparency = 1
+});
+TweenObject(v11, 0.5, {
+    BackgroundTransparency = 1
+});
+TweenObject(v12, 0.5, {
+    BackgroundTransparency = 1
+});
+wait(0.5);
+TweenObject(v6, 0.25, {
+    Size = UDim2.new(0, 0, 0, 0)
+});
+wait(0.25);
+v5:Destroy();
 
-wait(0.5)
-screenGui:Destroy()
+local v14 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))();
 
--- Load Fluent UI
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-
--- Tạo Window Cao Cấp
-local Window = Fluent:CreateWindow({
+-- CHỈ THAY ĐỔI PHẦN WINDOW THÀNH VIP - GIỮ NGUYÊN TÍNH NĂNG
+local v15 = v14:CreateWindow({
     Title = "gà gaming Hub",
-    SubTitle = "VIP Edition", 
+    SubTitle = "VIP Edition",
     TabWidth = 170,
     Size = UDim2.fromOffset(620, 450),
     MinimizeKey = Enum.KeyCode.F9,
@@ -65,178 +245,65 @@ local Window = Fluent:CreateWindow({
     Mica = true,
 })
 
--- Theme Vàng Gold Cao Cấp
-Fluent:ApplyThemeOption("Accent", Color3.fromRGB(255, 215, 0))
-Fluent:ApplyThemeOption("WindowBackgroundColor", Color3.fromRGB(10, 10, 20))
+-- Theme vàng gold
+v14:ApplyThemeOption("Accent", Color3.fromRGB(255, 215, 0))
 
--- Tabs với icon
-local Tabs = {
-    Home = Window:AddTab({Title = "🏠 Thông Tin"}),
-    Main = Window:AddTab({Title = "⚔️ Cày Auto"}),
-    Sea = Window:AddTab({Title = "🌊 Sự Kiện"}),
-    ITM = Window:AddTab({Title = "🎒 Vật Phẩm"}),
-    Setting = Window:AddTab({Title = "⚙️ Cài Đặt"}),
-    Stats = Window:AddTab({Title = "📊 Chỉ Số"}),
-    Player = Window:AddTab({Title = "👤 Người Chơi"}),
-    Teleport = Window:AddTab({Title = "📍 Dịch Chuyển"}),
-    Fruit = Window:AddTab({Title = "🍎 Trái Ác Quỷ"}),
-    Raid = Window:AddTab({Title = "🔥 Tập Kích"}),
-    Race = Window:AddTab({Title = "🏹 Tộc"}),
-    Shop = Window:AddTab({Title = "🏪 Cửa Hàng"}),
-    Misc = Window:AddTab({Title = "🔧 Khác"})
+local v16 = {
+    Home = v15:AddTab({Title = "🏠 Thông Tin"}),
+    Main = v15:AddTab({Title = "⚔️ Cày Auto"}),
+    Sea = v15:AddTab({Title = "🌊 Sự Kiện"}),
+    ITM = v15:AddTab({Title = "🎒 Vật PhẩM"}),
+    Setting = v15:AddTab({Title = "⚙️ Cài Đặt"}),
+    Status = v15:AddTab({Title = "🖥️ Máy Chủ"}),
+    Stats = v15:AddTab({Title = "📊 Chỉ Số"}),
+    Player = v15:AddTab({Title = "👤 Người Chơi"}),
+    Teleport = v15:AddTab({Title = "📍 Dịch Chuyển"}),
+    Visual = v15:AddTab({Title = "👻 Giả Lập"}),
+    Fruit = v15:AddTab({Title = "🍎 Trái Ác Quỷ"}),
+    Raid = v15:AddTab({Title = "🔥 Tập Kích"}),
+    Race = v15:AddTab({Title = "🏹 Tộc"}),
+    Shop = v15:AddTab({Title = "🏪 Cửa Hàng"}),
+    Misc = v15:AddTab({Title = "🔧 Khác"})
 }
 
-local Options = Fluent.Options
+local v17 = v14.Options;
 
--- Tab Thông Tin
-Tabs.Home:AddButton({
-    Title = "Discord Server",
-    Description = "Tham gia cộng đồng",
-    Callback = function()
-        setclipboard("https://discord.gg/tboyroblox")
-    end
-})
+-- TẤT CẢ CODE TÍNH NĂNG CỦA BẠN GIỮ NGUYÊN 100% TỪ ĐÂY...
+local v18 = game.PlaceId;
+if (v18 == 2753915549) then
+    Sea1 = true;
+elseif (v18 == 4442272183) then
+    Sea2 = true;
+elseif (v18 == 7449423635) then
+    Sea3 = true;
+else
+    game:Shutdown();
+end
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+    game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame);
+    wait();
+    game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame);
+end);
+Sea1 = false;
+Sea2 = false;
+Sea3 = false;
+local v19 = game.PlaceId;
+if (v19 == 2753915549) then
+    Sea1 = true;
+elseif (v19 == 4442272183) then
+    Sea2 = true;
+elseif (v19 == 7449423635) then
+    Sea3 = true;
+end
 
-Tabs.Home:AddParagraph({
-    Title = "gà gaming Hub VIP",
-    Content = "Phiên bản cao cấp với giao diện vàng gold"
-})
-
--- Tab Cày Auto
-Tabs.Main:AddSection("Cài Đặt Chính")
-
-local DropdownWeapon = Tabs.Main:AddDropdown("WeaponSelect", {
-    Title = "Vũ Khí",
-    Values = {"Melee", "Sword", "Blox Fruit"},
-    Default = "Melee",
-})
-
-DropdownWeapon:OnChanged(function(value)
-    _G.SelectWeapon = value
-end)
-
-local ToggleLevel = Tabs.Main:AddToggle("AutoFarm", {
-    Title = "Cày Cấp",
-    Default = false,
-})
-
-ToggleLevel:OnChanged(function(value)
-    _G.AutoLevel = value
-end)
-
-local ToggleBoss = Tabs.Main:AddToggle("AutoBoss", {
-    Title = "Đánh Boss",
-    Default = false, 
-})
-
-ToggleBoss:OnChanged(function(value)
-    _G.AutoBoss = value
-end)
-
--- Tab Vật Phẩm
-Tabs.ITM:AddSection("Nguyên Liệu")
-
-local MaterialList = {"Scrap Metal", "Leather", "Magma Ore", "Fish Tail"}
-local DropdownMaterial = Tabs.ITM:AddDropdown("MaterialSelect", {
-    Title = "Chọn Nguyên Liệu",
-    Values = MaterialList,
-    Default = "Scrap Metal",
-})
-
-DropdownMaterial:OnChanged(function(value)
-    _G.SelectMaterial = value
-end)
-
-local ToggleMaterial = Tabs.ITM:AddToggle("FarmMaterial", {
-    Title = "Cày Nguyên Liệu",
-    Default = false,
-})
-
-ToggleMaterial:OnChanged(function(value)
-    _G.AutoMaterial = value
-end)
-
--- Tab Cài Đặt
-Tabs.Setting:AddSection("Tùy Chỉnh")
-
-local SliderWS = Tabs.Setting:AddSlider("WalkSpeed", {
-    Title = "Tốc Độ Chạy",
-    Default = 16,
-    Min = 16,
-    Max = 200,
-    Rounding = 1,
-})
-
-SliderWS:OnChanged(function(value)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
-end)
-
-local SliderJP = Tabs.Setting:AddSlider("JumpPower", {
-    Title = "Sức Nhảy", 
-    Default = 50,
-    Min = 50,
-    Max = 200,
-    Rounding = 1,
-})
-
-SliderJP:OnChanged(function(value)
-    game.Players.LocalPlayer.Character.Humanoid.JumpPower = value
-end)
-
--- Toggle Anti AFK
-Tabs.Setting:AddToggle("AntiAFK", {
-    Title = "Chống AFK",
-    Default = true,
-})
-
--- Icon Button
-local toggleGui = Instance.new("ScreenGui", game.CoreGui)
-local toggleBtn = Instance.new("ImageButton", toggleGui)
-toggleBtn.Size = UDim2.new(0, 50, 0, 50)
-toggleBtn.Position = UDim2.new(0, 10, 0, 10)
-toggleBtn.Image = "http://www.roblox.com/asset/?id=77817527501053"
-toggleBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-toggleBtn.ImageColor3 = Color3.fromRGB(255, 215, 0)
-
-local btnCorner = Instance.new("UICorner", toggleBtn)
-btnCorner.CornerRadius = UDim.new(0, 12)
-
--- Particle Effect
-local particles = Instance.new("ParticleEmitter", toggleBtn)
-particles.Color = ColorSequence.new(Color3.fromRGB(255, 215, 0), Color3.fromRGB(255, 165, 0))
-particles.Lifetime = NumberRange.new(0.5, 1)
-particles.Rate = 0
-particles.Speed = NumberRange.new(5, 10)
-
-toggleBtn.MouseButton1Click:Connect(function()
-    particles.Rate = 100
-    task.delay(1, function()
-        particles.Rate = 0
-    end)
-    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.F9, false, game)
-end)
-
--- Thông báo hoàn tất
-Fluent:Notify({
-    Title = "🎊 gà gaming Hub VIP",
-    Content = "Giao diện cao cấp đã sẵn sàng!",
-    Duration = 5
-})
-
--- Auto Clicker đơn giản
-spawn(function()
-    while task.wait() do
-        if _G.AutoLevel then
-            pcall(function()
-                -- Code farm level đơn giản
-                local enemies = game:GetService("Workspace").Enemies:GetChildren()
-                for _, enemy in pairs(enemies) do
-                    if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
-                        break
-                    end
-                end
-            end)
-        end
-    end
-end)
+function CheckLevel()
+    local v197 = game:GetService("Players").LocalPlayer.Data.Level.Value;
+    if Sea1 then
+        if ((v197 == 1) or (v197 <= 9) or (SelectMonster == "Bandit")) then
+            Ms = "Bandit";
+            NameQuest = "BanditQuest1";
+            QuestLv = 1;
+            NameMon = "Bandit";
+            CFrameQ = CFrame.new(1060.9383544922, 16.455066680908, 1547.7841796875);
+            CFrameMon = CFrame.new(1038.5533447266, 41.296249389648, 1576.5098876953);
+        elseif ((v197 == 10) or (v197 <= 14) or (SelectMonster == "Monkey"))
