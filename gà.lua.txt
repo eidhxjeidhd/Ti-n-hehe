@@ -1,14 +1,6 @@
 -- discord.gg/tboyroblox
 
--- CHỈ THAY ĐỔI PHẦN NÀY - GIỮ NGUYÊN TÍNH NĂNG
-shared.LoaderTitle = "gà gaming Hub - VIP Edition";
-shared.LoaderColors = {
-    Main = Color3.fromRGB(10, 10, 20),
-    Topic = Color3.fromRGB(200, 200, 200),
-    Title = Color3.fromRGB(255, 215, 0),
-    LoaderBackground = Color3.fromRGB(30, 30, 40),
-    LoaderSplash = Color3.fromRGB(255, 215, 0)
-};
+shared.LoaderTitle = "Đăng Ký Kênh TBoy Roblox";
 shared.LoaderKeyFrames = {
     [1] = {
         1,
@@ -27,6 +19,11 @@ shared.LoaderKeyFrames = {
         100
     }
 };
+
+-- Biến toàn cục để lưu ID ảnh và trạng thái
+_G.ImageID = "rbxassetid://83190276951914" -- ID ảnh mặc định
+_G.ImageEnabled = true -- Trạng thái bật/tắt ảnh
+
 local v2 = {
     LoaderData = {
         Name = shared.LoaderTitle or "A Loader",
@@ -57,15 +54,18 @@ local v2 = {
         }
     }
 };
+
 local v3 = {
     [1] = "",
     [2] = "",
     [3] = "",
     [4] = ""
 };
+
 function TweenObject(v178, v179, v180)
     game.TweenService:Create(v178, TweenInfo.new(v179, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), v180):Play();
 end
+
 function CreateObject(v181, v182)
     local v183 = Instance.new(v181);
     local v184;
@@ -79,15 +79,18 @@ function CreateObject(v181, v182)
     v183.Parent = v184;
     return v183;
 end
+
 local function v4(v186, v187)
     local v188 = Instance.new("UICorner");
     v188.CornerRadius = UDim.new(0, v186);
     v188.Parent = v187;
 end
+
 local v5 = CreateObject("ScreenGui", {
     Name = "Core",
     Parent = game.CoreGui
 });
+
 local v6 = CreateObject("Frame", {
     Name = "Main",
     Parent = v5,
@@ -99,20 +102,32 @@ local v6 = CreateObject("Frame", {
     Size = UDim2.new(0, 0, 0, 0)
 });
 v4(12, v6);
+
+-- Tạo ImageLabel với khả năng bật/tắt và thay đổi ID
 local v7 = CreateObject("ImageLabel", {
     Name = "UserImage",
     Parent = v6,
     BackgroundTransparency = 1,
-    Image = "rbxassetid://77817527501053",
+    Image = _G.ImageEnabled and _G.ImageID or "",
     Position = UDim2.new(0, 15, 0, 10),
-    Size = UDim2.new(0, 50, 0, 50)
+    Size = UDim2.new(0, 50, 0, 50),
+    Visible = _G.ImageEnabled
 });
 v4(25, v7);
+
+-- Hàm cập nhật ảnh
+function UpdateImage()
+    if v7 then
+        v7.Image = _G.ImageEnabled and _G.ImageID or ""
+        v7.Visible = _G.ImageEnabled
+    end
+end
+
 local v8 = CreateObject("TextLabel", {
     Name = "UserName",
     Parent = v6,
     BackgroundTransparency = 1,
-    Text = "Youtube: Gà gaming",
+    Text = "Youtube: TBoy Roblox",
     Position = UDim2.new(0, 75, 0, 10),
     Size = UDim2.new(0, 200, 0, 50),
     Font = Enum.Font.GothamBold,
@@ -120,6 +135,7 @@ local v8 = CreateObject("TextLabel", {
     TextSize = 14,
     TextXAlignment = Enum.TextXAlignment.Left
 });
+
 local v9 = CreateObject("TextLabel", {
     Name = "Top",
     TextTransparency = 1,
@@ -134,6 +150,7 @@ local v9 = CreateObject("TextLabel", {
     TextSize = 10,
     TextXAlignment = Enum.TextXAlignment.Left
 });
+
 local v10 = CreateObject("TextLabel", {
     Name = "Title",
     Parent = v6,
@@ -149,6 +166,7 @@ local v10 = CreateObject("TextLabel", {
     TextSize = 14,
     TextXAlignment = Enum.TextXAlignment.Left
 });
+
 local v11 = CreateObject("Frame", {
     Name = "BG",
     Parent = v6,
@@ -160,6 +178,7 @@ local v11 = CreateObject("Frame", {
     Size = UDim2.new(0.8500000238418579, 0, 0, 24)
 });
 v4(8, v11);
+
 local v12 = CreateObject("Frame", {
     Name = "Progress",
     Parent = v11,
@@ -169,6 +188,7 @@ local v12 = CreateObject("Frame", {
     Size = UDim2.new(0, 0, 0, 24)
 });
 v4(8, v12);
+
 local v13 = CreateObject("TextLabel", {
     Name = "StepLabel",
     Parent = v6,
@@ -182,15 +202,19 @@ local v13 = CreateObject("TextLabel", {
     TextXAlignment = Enum.TextXAlignment.Center,
     AnchorPoint = Vector2.new(0.5, 0.5)
 });
+
 function UpdateStepText(v191)
     v13.Text = v3[v191] or "" ;
 end
+
 function UpdatePercentage(v193, v194)
     TweenObject(v12, 0.5, {
         Size = UDim2.new(v193 / 100, 0, 0, 24)
     });
     UpdateStepText(v194);
 end
+
+-- Animation loader
 TweenObject(v6, 0.25, {
     Size = UDim2.new(0, 346, 0, 121)
 });
@@ -207,10 +231,12 @@ TweenObject(v11, 0.5, {
 TweenObject(v12, 0.5, {
     BackgroundTransparency = 0
 });
+
 for v195, v196 in pairs(v2.Keyframes) do
     wait(v196[1]);
     UpdatePercentage(v196[2], v195);
 end
+
 UpdatePercentage(100, 4);
 TweenObject(v9, 0.5, {
     TextTransparency = 1
@@ -231,79 +257,158 @@ TweenObject(v6, 0.25, {
 wait(0.25);
 v5:Destroy();
 
+-- GUI chính với Fluent
 local v14 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))();
-
--- CHỈ THAY ĐỔI PHẦN WINDOW THÀNH VIP - GIỮ NGUYÊN TÍNH NĂNG
 local v15 = v14:CreateWindow({
-    Title = "gà gaming Hub",
-    SubTitle = "VIP Edition",
-    TabWidth = 170,
-    Size = UDim2.fromOffset(620, 450),
-    MinimizeKey = Enum.KeyCode.F9,
-    Theme = "Darker",
-    Acrylic = true,
-    Mica = true,
-})
-
--- Theme vàng gold
-v14:ApplyThemeOption("Accent", Color3.fromRGB(255, 215, 0))
+    Title = "TBoy Roblox Hub",
+    SubTitle = "Blox Fruit",
+    TabWidth = 160,
+    Theme = "Dark",
+    Acrylic = false,
+    Size = UDim2.fromOffset(500, 320),
+    MinimizeKey = Enum.KeyCode.End
+});
 
 local v16 = {
-    Home = v15:AddTab({Title = "🏠 Thông Tin"}),
-    Main = v15:AddTab({Title = "⚔️ Cày Auto"}),
-    Sea = v15:AddTab({Title = "🌊 Sự Kiện"}),
-    ITM = v15:AddTab({Title = "🎒 Vật PhẩM"}),
-    Setting = v15:AddTab({Title = "⚙️ Cài Đặt"}),
-    Status = v15:AddTab({Title = "🖥️ Máy Chủ"}),
-    Stats = v15:AddTab({Title = "📊 Chỉ Số"}),
-    Player = v15:AddTab({Title = "👤 Người Chơi"}),
-    Teleport = v15:AddTab({Title = "📍 Dịch Chuyển"}),
-    Visual = v15:AddTab({Title = "👻 Giả Lập"}),
-    Fruit = v15:AddTab({Title = "🍎 Trái Ác Quỷ"}),
-    Raid = v15:AddTab({Title = "🔥 Tập Kích"}),
-    Race = v15:AddTab({Title = "🏹 Tộc"}),
-    Shop = v15:AddTab({Title = "🏪 Cửa Hàng"}),
-    Misc = v15:AddTab({Title = "🔧 Khác"})
-}
+    Home = v15:AddTab({
+        Title = "Thông Tin"
+    }),
+    Main = v15:AddTab({
+        Title = "Cài Đặt Ảnh"
+    }),
+    -- Các tab khác...
+};
 
 local v17 = v14.Options;
 
--- TẤT CẢ CODE TÍNH NĂNG CỦA BẠN GIỮ NGUYÊN 100% TỪ ĐÂY...
-local v18 = game.PlaceId;
-if (v18 == 2753915549) then
-    Sea1 = true;
-elseif (v18 == 4442272183) then
-    Sea2 = true;
-elseif (v18 == 7449423635) then
-    Sea3 = true;
-else
-    game:Shutdown();
-end
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-    game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame);
-    wait();
-    game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame);
-end);
-Sea1 = false;
-Sea2 = false;
-Sea3 = false;
-local v19 = game.PlaceId;
-if (v19 == 2753915549) then
-    Sea1 = true;
-elseif (v19 == 4442272183) then
-    Sea2 = true;
-elseif (v19 == 7449423635) then
-    Sea3 = true;
+-- Section cài đặt ảnh
+local ImageSection = v16.Main:AddSection("Cài Đặt Ảnh")
+
+-- Input để nhập ID ảnh
+local ImageIDInput = v16.Main:AddInput("ImageIDInput", {
+    Title = "ID Ảnh",
+    Default = _G.ImageID,
+    Numeric = false,
+    Finished = false,
+    Callback = function(value)
+        _G.ImageID = value
+        UpdateImage()
+    end
+})
+
+-- Toggle để bật/tắt ảnh
+local ImageToggle = v16.Main:AddToggle("ImageToggle", {
+    Title = "Hiển Thị Ảnh",
+    Description = "Bật/tắt hiển thị ảnh",
+    Default = _G.ImageEnabled,
+    Callback = function(value)
+        _G.ImageEnabled = value
+        UpdateImage()
+    end
+})
+
+-- Nút áp dụng thay đổi
+v16.Main:AddButton({
+    Title = "Áp Dụng Thay Đổi",
+    Description = "Cập nhật ảnh với ID mới",
+    Callback = function()
+        UpdateImage()
+        v14:Notify({
+            Title = "Thành Công",
+            Content = "Đã cập nhật ảnh!",
+            Duration = 3
+        })
+    end
+})
+
+-- Nút reset về ảnh mặc định
+v16.Main:AddButton({
+    Title = "Reset Ảnh Mặc Định",
+    Description = "Khôi phục ảnh gốc",
+    Callback = function()
+        _G.ImageID = "rbxassetid://83190276951914"
+        _G.ImageEnabled = true
+        ImageIDInput:SetValue(_G.ImageID)
+        ImageToggle:SetValue(_G.ImageEnabled)
+        UpdateImage()
+        v14:Notify({
+            Title = "Thành Công",
+            Content = "Đã reset về ảnh mặc định!",
+            Duration = 3
+        })
+    end
+})
+
+-- Hiển thị thông tin
+v16.Main:AddParagraph({
+    Title = "Hướng Dẫn",
+    Content = "77817527501053 Roblox (định dạng: rbxassetid:77817527501053//...) và bật/tắt hiển thị ảnh."
+})
+
+-- Tab Home với thông tin cơ bản
+v16.Home:AddButton({
+    Title = "Discord",
+    Description = "Giao Lưu",
+    Callback = function()
+        setclipboard("https://discord.gg/tboyroblox");
+    end
+})
+
+v16.Home:AddParagraph({
+    Title = "Thông Tin Script",
+    Content = "Script với tính năng tùy chỉnh ảnh - Cho phép thay đổi ID ảnh và bật/tắt hiển thị."
+})
+
+-- Tạo nút toggle trên màn hình
+local ToggleGui = Instance.new("ScreenGui")
+local ToggleButton = Instance.new("TextButton")
+local UICorner = Instance.new("UICorner")
+
+ToggleGui.Name = "ImageToggleGui"
+ToggleGui.Parent = game.CoreGui
+ToggleGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+ToggleButton.Name = "ToggleImageButton"
+ToggleButton.Parent = ToggleGui
+ToggleButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+ToggleButton.BorderSizePixel = 0
+ToggleButton.Position = UDim2.new(0.8, 0, 0.1, 0)
+ToggleButton.Size = UDim2.new(0, 120, 0, 40)
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.Text = _G.ImageEnabled and "Ảnh: BẬT" or "Ảnh: TẮT"
+ToggleButton.TextColor3 = _G.ImageEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+ToggleButton.TextSize = 14
+ToggleButton.Draggable = true
+
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = ToggleButton
+
+-- Sự kiện click cho nút toggle
+ToggleButton.MouseButton1Click:Connect(function()
+    _G.ImageEnabled = not _G.ImageEnabled
+    UpdateImage()
+    ToggleButton.Text = _G.ImageEnabled and "Ảnh: BẬT" or "Ảnh: TẮT"
+    ToggleButton.TextColor3 = _G.ImageEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+end)
+
+-- Hàm để tạo ảnh mới (nếu cần)
+function CreateNewImage(parent, position, size)
+    local newImage = CreateObject("ImageLabel", {
+        Name = "CustomImage",
+        Parent = parent,
+        BackgroundTransparency = 1,
+        Image = _G.ImageEnabled and _G.ImageID or "",
+        Position = position,
+        Size = size,
+        Visible = _G.ImageEnabled
+    })
+    v4(25, newImage)
+    return newImage
 end
 
-function CheckLevel()
-    local v197 = game:GetService("Players").LocalPlayer.Data.Level.Value;
-    if Sea1 then
-        if ((v197 == 1) or (v197 <= 9) or (SelectMonster == "Bandit")) then
-            Ms = "Bandit";
-            NameQuest = "BanditQuest1";
-            QuestLv = 1;
-            NameMon = "Bandit";
-            CFrameQ = CFrame.new(1060.9383544922, 16.455066680908, 1547.7841796875);
-            CFrameMon = CFrame.new(1038.5533447266, 41.296249389648, 1576.5098876953);
-        elseif ((v197 == 10) or (v197 <= 14) or (SelectMonster == "Monkey")) then
+-- Thông báo khi script chạy
+v14:Notify({
+    Title = "TBoy Roblox Hub",
+    Content = "Script đã được khởi chạy! Sử dụng tab 'Cài Đặt Ảnh' để tùy chỉnh.",
+    Duration = 5
+})
