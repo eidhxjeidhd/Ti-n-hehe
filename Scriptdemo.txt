@@ -102,3 +102,12 @@ spawn(function()
         end
     end
 end)
+
+-- [[ PHÍM TẮT ẨN MENU ]] --
+-- Nếu dùng máy tính: Nhấn phím LeftControl (Ctrl trái)
+-- Nếu dùng điện thoại: Sẽ có một nút nhỏ hình icon Rayfield để bấm ẩn đi
+Rayfield:Notify({
+   Title = "GÀ GAMING",
+   Content = "Nhấn nút 'Gà Farm' hoặc phím CTRL để ẩn Menu nhé vợ!",
+   Duration = 5
+})
