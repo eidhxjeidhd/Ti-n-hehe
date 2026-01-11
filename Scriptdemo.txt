@@ -1,15 +1,16 @@
--- [[ GÀ GAMING HUB - BẢN FULL FIX LỖI KHÔNG ĐÁNH ]] --
+-- [[ GÀ GAMING HUB - BẢN FULL KHÔNG MẤT TÍNH NĂNG ]] --
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "🔥 GÀ GAMING HUB | FIX ALL BUG 🔥",
-   LoadingTitle = "Đang kết nối dữ liệu siêu cấp...",
-   ConfigurationSaving = { Enabled = true, FileName = "GaGamingFull" }
+   Name = "🔥 GÀ GAMING HUB | BẢN CUỐI CỰC MƯỢT 🔥",
+   LoadingTitle = "Đang gộp tất cả tính năng cho vợ yêu...",
+   ConfigurationSaving = { Enabled = true, FileName = "GaGamingFullFinal" }
 })
 
 -- [[ BIẾN ĐIỀU KHIỂN ]] --
 _G.AutoFarm = false
 _G.AutoBone = false
+_G.AutoDeathKing = false
 _G.BringMob = false
 _G.FastAttack = true
 _G.SelectWeapon = "Melee"
@@ -17,7 +18,7 @@ _G.SelectWeapon = "Melee"
 -- [[ TAB CHÍNH ]] --
 local MainTab = Window:CreateTab("Gà Farm", 4483362458)
 
-MainTab:CreateSection("Hệ Thống Farm Siêu Cấp")
+MainTab:CreateSection("Hệ Thống GÀ GAMING")
 
 MainTab:CreateToggle({
    Name = "Auto Farm Level (Max 2800)",
@@ -37,26 +38,34 @@ MainTab:CreateToggle({
    end,
 })
 
+MainTab:CreateToggle({
+   Name = "Tự Đổi Xương (Death King)",
+   CurrentValue = false,
+   Callback = function(Value) 
+      _G.AutoDeathKing = Value 
+   end,
+})
+
 MainTab:CreateDropdown({
-   Name = "Chọn Vũ Khí",
+   Name = "Vũ khí sử dụng",
    Options = {"Melee","Sword","Fruit"},
    CurrentOption = {"Melee"},
    Callback = function(Option) _G.SelectWeapon = Option[1] end,
 })
 
--- [[ HÀM ĐÁNH TRỰC TIẾP (FIX LỖI) ]] --
+-- [[ HÀM ĐÁNH FIX LỖI (DO ATTACK) ]] --
 local function GàGamingAttack()
     pcall(function()
         local Net = game:GetService("ReplicatedStorage").Modules.Net
-        Net.RegisterAttack:FireServer()
+        Net.RegisterAttack:FireServer() -- Lệnh vung tay
         local monster = game:GetService("Workspace").Enemies:FindFirstChildOfClass("Model")
         if monster and monster:FindFirstChild("HumanoidRootPart") then
-            Net.RegisterHit:FireServer(monster.HumanoidRootPart)
+            Net.RegisterHit:FireServer(monster.HumanoidRootPart) -- Lệnh gây sát thương
         end
     end)
 end
 
--- [[ VÒNG LẶP XỬ LÝ TẤT CẢ TÍNH NĂNG ]] --
+-- [[ VÒNG LẶP XỬ LÝ TẤT CẢ ]] --
 spawn(function()
     while task.wait() do
         if _G.AutoFarm or _G.AutoBone then
@@ -64,11 +73,11 @@ spawn(function()
                 local char = game.Players.LocalPlayer.Character
                 local root = char.HumanoidRootPart
                 
-                -- Tìm quái theo chế độ farm
+                -- Tìm quái mục tiêu
                 local target = nil
                 if _G.AutoBone then
                     for _, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
-                        if (v.Name == "Reborn Skeleton" or v.Name == "Living Zombie") and v.Humanoid.Health > 0 then
+                        if (v.Name == "Reborn Skeleton" or v.Name == "Living Zombie" or v.Name == "Demonic Soul") and v.Humanoid.Health > 0 then
                             target = v break
                         end
                     end
@@ -77,37 +86,35 @@ spawn(function()
                 end
 
                 if target and target:FindFirstChild("HumanoidRootPart") then
-                    -- Bay sát quái
-                    root.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 6, 0)
+                    -- BAY SÁT QUÁI (Hạ độ cao xuống 4 để đánh trúng)
+                    root.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 4, 0)
                     
-                    -- Gom quái xung quanh
+                    -- Gom quái (Bring Mob)
                     if _G.BringMob then
                         for _, m in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
                             if m:FindFirstChild("HumanoidRootPart") and (m.HumanoidRootPart.Position - root.Position).Magnitude < 250 then
-                                m.HumanoidRootPart.CFrame = root.CFrame * CFrame.new(0, -6, 0)
+                                m.HumanoidRootPart.CFrame = root.CFrame * CFrame.new(0, -4, 0)
                                 m.HumanoidRootPart.CanCollide = false
                             end
                         end
                     end
 
-                    -- Cầm vũ khí
+                    -- Tự động cầm vũ khí
                     for _, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
                         if tool.ToolTip == _G.SelectWeapon then
                             char.Humanoid:EquipTool(tool)
                         end
                     end
                     
-                    -- Thực hiện đánh siêu tốc
+                    -- ĐÁNH
                     GàGamingAttack()
                 end
             end)
         end
+        
+        -- Auto đổi xương tại Death King
+        if _G.AutoDeathKing then
+            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("DeathKing","Buy",1)
+        end
     end
-end)
-
--- [[ CHỐNG AFK ]] --
-game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-    wait(1)
-    game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
 end)
