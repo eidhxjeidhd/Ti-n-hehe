@@ -1,32 +1,126 @@
--- Load UI Library (Ví dụ sử dụng Fluent hoặc Rayfield)
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+-- [[ GEMINI PREMIUM HUB - BLOX FRUITS ]] --
+-- Cập nhật cho Level 2800+
 
-local Window = Fluent:CreateWindow({
-    Title = "My Custom Hub",
-    SubTitle = "by YourName",
-    TabWidth = 160,
-    Size = UDim2.fromOffset(580, 460),
-    Acrylic = true,
-    Theme = "Dark"
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "GEMINI PRIVATE HUB | UPDATE 22+",
+   LoadingTitle = "Đang tải dữ liệu Level 2800...",
+   ConfigurationSaving = { Enabled = true, FileName = "GeminiConfig" }
 })
 
--- Tạo một Tab mới
-local Tabs = {
-    Main = Window:AddTab({ Title = "Main", Icon = "home" }),
-    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+-- [[ BIẾN TOÀN CỤC ]] --
+_G.AutoFarm = false
+_G.AutoStats = false
+_G.FastAttack = false
+_G.SelectWeapon = "Melee"
+
+-- [[ DATA QUEST - CẬP NHẬT MỚI NHẤT ]] --
+local QuestData = {
+    [2450] = {NPC = "Sweet Crafter", Quest = "Ice Cream Quest 1", Monster = "Cookie Crafter", Pos = CFrame.new(-817, 65, -10960)},
+    [2525] = {NPC = "Candy Rebel", Quest = "Chocolate Quest 2", Monster = "Cocoa Warrior", Pos = CFrame.new(230, 25, -12100)},
+    [2700] = {NPC = "New Island NPC", Quest = "Final Quest", Monster = "Elite Warrior", Pos = CFrame.new(5000, 100, -15000)} -- Ví dụ tọa độ đảo mới
 }
 
--- Thêm tính năng Auto Farm (Ví dụ đơn giản)
-local AutoFarmToggle = Tabs.Main:AddToggle("AutoFarm", {Title = "Auto Farm Level", Default = false })
+-- [[ TAB CHÍNH ]] --
+local MainTab = Window:CreateTab("Auto Farm", 4483362458)
 
-AutoFarmToggle:OnChanged(function()
-    _G.AutoFarm = Fluent.Options.AutoFarm.Value
+MainTab:CreateSection("Farm Cấu Hình")
+
+MainTab:CreateToggle({
+   Name = "Bật Auto Farm Level (2800)",
+   CurrentValue = false,
+   Callback = function(Value)
+      _G.AutoFarm = Value
+      _G.FastAttack = Value
+   end,
+})
+
+MainTab:CreateDropdown({
+   Name = "Vũ khí sử dụng",
+   Options = {"Melee","Sword","Fruit"},
+   CurrentOption = {"Melee"},
+   Callback = function(Option) _G.SelectWeapon = Option[1] end,
+})
+
+-- [[ HÀM NHẬN NHIỆM VỤ TỰ ĐỘNG ]] --
+function GetQuest()
+    local lvl = game.Players.LocalPlayer.Data.Level.Value
+    local bestDist = 0
+    local target = nil
     
-    spawn(function()
-        while _G.AutoFarm do
-            wait()
-            -- Logic tìm quái và đánh quái sẽ nằm ở đây
-            print("Đang tự động farm...")
+    for minLvl, data in pairs(QuestData) do
+        if lvl >= minLvl and minLvl >= bestDist then
+            bestDist = minLvl
+            target = data
         end
-    end)
+    end
+    return target
+end
+
+-- [[ HỆ THỐNG DI CHUYỂN TWEEN ]] --
+function TweenTo(pos)
+    local char = game.Players.LocalPlayer.Character.HumanoidRootPart
+    local dist = (char.Position - pos.p).Magnitude
+    local speed = 350 -- Tốc độ bay an toàn
+    game:GetService("TweenService"):Create(char, TweenInfo.new(dist/speed, Enum.EasingStyle.Linear), {CFrame = pos}):Play()
+end
+
+-- [[ VÒNG LẶP AUTO FARM CHÍNH ]] --
+spawn(function()
+    while task.wait() do
+        if _G.AutoFarm then
+            pcall(function()
+                local q = GetQuest()
+                local hasQuest = game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Container.Visible
+                
+                if not hasQuest then
+                    -- Bay tới NPC nhận nhiệm vụ
+                    TweenTo(q.Pos)
+                    if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - q.Pos.p).Magnitude < 10 then
+                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", q.Quest, 1)
+                    end
+                else
+                    -- Đi tìm quái
+                    local targetMob = game:GetService("Workspace").Enemies:FindFirstChild(q.Monster)
+                    if targetMob and targetMob:FindFirstChild("Humanoid") and targetMob.Humanoid.Health > 0 then
+                        -- Gom quái & Đánh
+                        targetMob.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -5)
+                        targetMob.HumanoidRootPart.CanCollide = false
+                        
+                        -- Cầm vũ khí
+                        for _, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                            if v.ToolTip == _G.SelectWeapon then
+                                game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
+                            end
+                        end
+                        
+                        -- Đánh siêu tốc (Fast Attack)
+                        game:GetService("VirtualUser"):CaptureController()
+                        game:GetService("VirtualUser"):Button1Down(Vector2.new(1280, 672))
+                    else
+                        -- Bay tới bãi quái nếu chưa thấy quái
+                        TweenTo(q.Pos * CFrame.new(0, 50, 0))
+                    end
+                end
+            end)
+        end
+    end
 end)
+
+-- [[ TỰ ĐỘNG CỘNG ĐIỂM (STATS) ]] --
+local StatsTab = Window:CreateTab("Stats", 4483362458)
+StatsTab:CreateToggle({
+   Name = "Auto Stats (Melee)",
+   CurrentValue = false,
+   Callback = function(Value)
+      _G.AutoStats = Value
+      spawn(function()
+          while _G.AutoStats do task.wait(0.5)
+              game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AddPoint", "Melee", 3)
+          end
+      end)
+   end,
+})
+
+Rayfield:Notify({Title = "Gemini Hub", Content = "Đã sẵn sàng cho Level 2800!", Duration = 5})
