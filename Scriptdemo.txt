@@ -1,40 +1,55 @@
--- [[ GEMINI PREMIUM HUB - BLOX FRUITS ]] --
--- Cập nhật cho Level 2800+
+-- [[ GÀ GAMING PRIVATE HUB - ALL IN ONE ]] --
+-- Thương hiệu: GÀ GAMING
+-- Hỗ trợ: Auto Farm, Auto Bone, Bring Mob, Fast Attack
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "GEMINI PRIVATE HUB | UPDATE 22+",
-   LoadingTitle = "Đang tải dữ liệu Level 2800...",
-   ConfigurationSaving = { Enabled = true, FileName = "GeminiConfig" }
+   Name = "🔥 GÀ GAMING HUB | UPDATE 22+ 🔥",
+   LoadingTitle = "Đang khởi động hệ thống của GÀ GAMING...",
+   ConfigurationSaving = { Enabled = true, FileName = "GaGamingConfig" }
 })
 
--- [[ BIẾN TOÀN CỤC ]] --
+-- [[ BIẾN ĐIỀU KHIỂN ]] --
 _G.AutoFarm = false
-_G.AutoStats = false
-_G.FastAttack = false
+_G.AutoBone = false
+_G.AutoDeathKing = false
+_G.BringMob = false
+_G.FastAttack = true
 _G.SelectWeapon = "Melee"
 
--- [[ DATA QUEST - CẬP NHẬT MỚI NHẤT ]] --
-local QuestData = {
-    [2450] = {NPC = "Sweet Crafter", Quest = "Ice Cream Quest 1", Monster = "Cookie Crafter", Pos = CFrame.new(-817, 65, -10960)},
-    [2525] = {NPC = "Candy Rebel", Quest = "Chocolate Quest 2", Monster = "Cocoa Warrior", Pos = CFrame.new(230, 25, -12100)},
-    [2700] = {NPC = "New Island NPC", Quest = "Final Quest", Monster = "Elite Warrior", Pos = CFrame.new(5000, 100, -15000)} -- Ví dụ tọa độ đảo mới
-}
-
 -- [[ TAB CHÍNH ]] --
-local MainTab = Window:CreateTab("Auto Farm", 4483362458)
+local MainTab = Window:CreateTab("Gà Farm", 4483362458)
 
-MainTab:CreateSection("Farm Cấu Hình")
+MainTab:CreateSection("Hệ Thống GÀ GAMING")
 
 MainTab:CreateToggle({
-   Name = "Bật Auto Farm Level (2800)",
+   Name = "Auto Farm Level (Max 2800)",
    CurrentValue = false,
-   Callback = function(Value)
-      _G.AutoFarm = Value
-      _G.FastAttack = Value
+   Callback = function(Value) 
+      _G.AutoFarm = Value 
+      _G.BringMob = Value 
    end,
 })
+
+MainTab:CreateToggle({
+   Name = "Auto Farm Xương (Haunted Castle)",
+   CurrentValue = false,
+   Callback = function(Value) 
+      _G.AutoBone = Value 
+      _G.BringMob = Value 
+   end,
+})
+
+MainTab:CreateToggle({
+   Name = "Tự Đổi Xương (Death King)",
+   CurrentValue = false,
+   Callback = function(Value) 
+      _G.AutoDeathKing = Value 
+   end,
+})
+
+MainTab:CreateSection("Cấu Hình")
 
 MainTab:CreateDropdown({
    Name = "Vũ khí sử dụng",
@@ -43,64 +58,15 @@ MainTab:CreateDropdown({
    Callback = function(Option) _G.SelectWeapon = Option[1] end,
 })
 
--- [[ HÀM NHẬN NHIỆM VỤ TỰ ĐỘNG ]] --
-function GetQuest()
-    local lvl = game.Players.LocalPlayer.Data.Level.Value
-    local bestDist = 0
-    local target = nil
-    
-    for minLvl, data in pairs(QuestData) do
-        if lvl >= minLvl and minLvl >= bestDist then
-            bestDist = minLvl
-            target = data
-        end
-    end
-    return target
-end
-
--- [[ HỆ THỐNG DI CHUYỂN TWEEN ]] --
-function TweenTo(pos)
-    local char = game.Players.LocalPlayer.Character.HumanoidRootPart
-    local dist = (char.Position - pos.p).Magnitude
-    local speed = 350 -- Tốc độ bay an toàn
-    game:GetService("TweenService"):Create(char, TweenInfo.new(dist/speed, Enum.EasingStyle.Linear), {CFrame = pos}):Play()
-end
-
--- [[ VÒNG LẶP AUTO FARM CHÍNH ]] --
+-- [[ LOGIC GOM QUÁI & FAST ATTACK ]] --
 spawn(function()
     while task.wait() do
-        if _G.AutoFarm then
+        if _G.BringMob then
             pcall(function()
-                local q = GetQuest()
-                local hasQuest = game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Container.Visible
-                
-                if not hasQuest then
-                    -- Bay tới NPC nhận nhiệm vụ
-                    TweenTo(q.Pos)
-                    if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - q.Pos.p).Magnitude < 10 then
-                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", q.Quest, 1)
-                    end
-                else
-                    -- Đi tìm quái
-                    local targetMob = game:GetService("Workspace").Enemies:FindFirstChild(q.Monster)
-                    if targetMob and targetMob:FindFirstChild("Humanoid") and targetMob.Humanoid.Health > 0 then
-                        -- Gom quái & Đánh
-                        targetMob.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -5)
-                        targetMob.HumanoidRootPart.CanCollide = false
-                        
-                        -- Cầm vũ khí
-                        for _, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-                            if v.ToolTip == _G.SelectWeapon then
-                                game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
-                            end
-                        end
-                        
-                        -- Đánh siêu tốc (Fast Attack)
-                        game:GetService("VirtualUser"):CaptureController()
-                        game:GetService("VirtualUser"):Button1Down(Vector2.new(1280, 672))
-                    else
-                        -- Bay tới bãi quái nếu chưa thấy quái
-                        TweenTo(q.Pos * CFrame.new(0, 50, 0))
+                for _, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                    if v:FindFirstChild("HumanoidRootPart") and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 300 then
+                        v.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -5)
+                        v.HumanoidRootPart.CanCollide = false
                     end
                 end
             end)
@@ -108,19 +74,58 @@ spawn(function()
     end
 end)
 
--- [[ TỰ ĐỘNG CỘNG ĐIỂM (STATS) ]] --
-local StatsTab = Window:CreateTab("Stats", 4483362458)
-StatsTab:CreateToggle({
-   Name = "Auto Stats (Melee)",
-   CurrentValue = false,
-   Callback = function(Value)
-      _G.AutoStats = Value
-      spawn(function()
-          while _G.AutoStats do task.wait(0.5)
-              game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AddPoint", "Melee", 3)
-          end
-      end)
-   end,
-})
+-- [[ LOGIC AUTO CLICK & EQUIP ]] --
+spawn(function()
+    while task.wait() do
+        if _G.AutoFarm or _G.AutoBone then
+            pcall(function()
+                -- Auto Cầm Vũ Khí
+                local char = game.Players.LocalPlayer.Character
+                for _, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if tool.ToolTip == _G.SelectWeapon then 
+                        char.Humanoid:EquipTool(tool) 
+                    end
+                end
+                -- Auto Click
+                game:GetService("VirtualUser"):CaptureController()
+                game:GetService("VirtualUser"):Button1Down(Vector2.new(1280, 672))
+            end)
+        end
+    end
+end)
 
-Rayfield:Notify({Title = "Gemini Hub", Content = "Đã sẵn sàng cho Level 2800!", Duration = 5})
+-- [[ LOGIC DI CHUYỂN FARM XƯƠNG ]] --
+spawn(function()
+    while task.wait() do
+        if _G.AutoBone then
+            pcall(function()
+                local BonePos = CFrame.new(-9510, 172, 6070)
+                local monster = nil
+                for _, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                    if (v.Name == "Reborn Skeleton" or v.Name == "Living Zombie") and v.Humanoid.Health > 0 then
+                        monster = v break
+                    end
+                end
+                
+                if monster then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = monster.HumanoidRootPart.CFrame * CFrame.new(0, 7, 0)
+                else
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = BonePos
+                end
+            end)
+        end
+        
+        if _G.AutoDeathKing then
+            -- Lệnh đổi xương bí mật của GÀ GAMING
+            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("DeathKing","Buy",1) 
+        end
+    end
+end)
+
+-- [[ THÔNG BÁO ]] --
+Rayfield:Notify({
+   Title = "GÀ GAMING HUB",
+   Content = "Chào vợ yêu! Script Gà Gaming đã sẵn sàng!",
+   Duration = 6,
+   Image = 4483362458,
+})
