@@ -1,80 +1,42 @@
--- [[ GÀ GAMING HUB - PHIÊN BẢN ULTIMATE TẤT CẢ TÍNH NĂNG ]] --
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
-local Window = Rayfield:CreateWindow({
-   Name = "🔥 GÀ GAMING ULTIMATE | UPDATE 22+ 🔥",
-   LoadingTitle = "Đang tải bản Full tính năng... Yêu vợ! ❤️",
-   ConfigurationSaving = { Enabled = true, FileName = "GaGamingUltimate" }
-})
+-- [[ GÀ GAMING HUB - PHIÊN BẢN KAVO UI - HIỆN MENU 100% ]] --
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("🔥 GÀ GAMING ULTIMATE | CẤP 2754 🔥", "Midnight")
 
 -- [[ BIẾN ĐIỀU KHIỂN ]] --
 _G.AutoFarm = false
 _G.AutoBone = false
-_G.AutoStats = false
-_G.BringMob = false
 _G.SelectWeapon = "Melee"
-_G.FastAttack = true
 
--- [[ TẠO CÁC TAB ]] --
-local MainTab = Window:CreateTab("Auto Farm", 4483362458)
-local StatsTab = Window:CreateTab("Stats", 4483362458)
-local TeleportTab = Window:CreateTab("Teleport", 4483362458)
+-- [[ TẠO TAB ]] --
+local MainTab = Window:NewTab("Gà Farm")
+local MainSection = MainTab:NewSection("Hệ Thống Farm Siêu Cấp")
 
--- [[ PHẦN FARM CHÍNH ]] --
-MainTab:CreateSection("Hệ Thống Farm Của Gà")
+MainSection:NewToggle("Auto Farm Level", "Vừa bay vừa vả quái", function(state)
+    _G.AutoFarm = state
+end)
 
-MainTab:CreateToggle({
-   Name = "Auto Farm Level (Vừa bay vừa vả)",
-   CurrentValue = false,
-   Callback = function(Value) _G.AutoFarm = Value _G.BringMob = Value end,
-})
+MainSection:NewToggle("Auto Farm Xương (Bone)", "Farm tại Haunted Castle", function(state)
+    _G.AutoBone = state
+end)
 
-MainTab:CreateToggle({
-   Name = "Auto Farm Xương (Bone)",
-   CurrentValue = false,
-   Callback = function(Value) _G.AutoBone = Value _G.BringMob = Value end,
-})
-
-MainTab:CreateDropdown({
-   Name = "Vũ Khí Muốn Dùng",
-   Options = {"Melee","Sword","Fruit"},
-   CurrentOption = {"Melee"},
-   Callback = function(Option) _G.SelectWeapon = Option[1] end,
-})
-
--- [[ PHẦN CỘNG ĐIỂM ]] --
-StatsTab:CreateSection("Tự Động Cộng Điểm")
-StatsTab:CreateToggle({
-   Name = "Auto Melee",
-   CurrentValue = false,
-   Callback = function(Value) _G.AutoStats = Value end,
-})
-
--- [[ PHẦN DỊCH CHUYỂN ]] --
-TeleportTab:CreateSection("Di Chuyển Giữa Các Sea")
-TeleportTab:CreateButton({
-   Name = "Bay về Sea 1",
-   Callback = function() game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelMain") end,
-})
-TeleportTab:CreateButton({
-   Name = "Bay về Sea 2",
-   Callback = function() game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa") end,
-})
+MainSection:NewDropdown("Chọn Vũ Khí", "Chọn cái vợ đang cầm", {"Melee", "Sword", "Fruit"}, function(currentOption)
+    _G.SelectWeapon = currentOption
+end)
 
 -- [[ HÀM ĐÁNH SIÊU TỐC SIÊU FIX ]] --
-local function GàGamingSuperAttack()
+local function GaGamingSuperAttack()
     pcall(function()
         local Net = game:GetService("ReplicatedStorage").Modules.Net
         Net.RegisterAttack:FireServer()
         for _, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
-            if v:FindFirstChild("HumanoidRootPart") and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 40 then
+            if v:FindFirstChild("HumanoidRootPart") and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 50 then
                 Net.RegisterHit:FireServer(v.HumanoidRootPart)
             end
         end
     end)
 end
 
--- [[ VÒNG LẶP XỬ LÝ TẤT CẢ LOGIC ]] --
+-- [[ VÒNG LẶP FARM CHÍNH ]] --
 spawn(function()
     while task.wait() do
         if _G.AutoFarm or _G.AutoBone then
@@ -82,7 +44,7 @@ spawn(function()
                 local char = game.Players.LocalPlayer.Character
                 local root = char.HumanoidRootPart
                 
-                -- Tìm quái
+                -- Tìm quái (Ưu tiên quái gần nhất hoặc theo tên)
                 local target = nil
                 for _, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
                     if v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
@@ -91,14 +53,12 @@ spawn(function()
                 end
 
                 if target then
-                    -- FIX LỖI BAY CAO: Ép nhân vật đứng sát quái (3 studs)
+                    -- FIX LỖI ĐỨNG YÊN: Ép nhân vật đứng sát quái (độ cao 3 studs)
                     root.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 3, 0)
                     
                     -- Gom quái (Bring Mob)
-                    if _G.BringMob then
-                        target.HumanoidRootPart.CanCollide = false
-                        target.HumanoidRootPart.CFrame = root.CFrame * CFrame.new(0, -3, 0)
-                    end
+                    target.HumanoidRootPart.CanCollide = false
+                    target.HumanoidRootPart.CFrame = root.CFrame * CFrame.new(0, -3, 0)
 
                     -- Cầm vũ khí
                     for _, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
@@ -107,25 +67,17 @@ spawn(function()
                         end
                     end
                     
-                    -- Thực hiện đánh
-                    GàGamingSuperAttack()
+                    -- VẢ QUÁI
+                    GaGamingSuperAttack()
                 end
             end)
-        end
-        
-        -- Logic Cộng điểm
-        if _G.AutoStats then
-            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AddPoint", "Melee", 3)
         end
     end
 end)
 
--- [[ CHỐNG AFK TUYỆT ĐỐI ]] --
-local vu = game:GetService("VirtualUser")
-game:GetService("Players").LocalPlayer.Idled:Connect(function()
-   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-   wait(1)
-   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+-- Nút ẩn hiện cho điện thoại
+local SettingsTab = Window:NewTab("Cài đặt")
+local SettingsSection = SettingsTab:NewSection("Phím tắt")
+SettingsSection:NewKeybind("Ẩn/Hiện Menu", "Bấm phím này để ẩn", Enum.KeyCode.RightControl, function()
+	Library:ToggleLib()
 end)
-
-Rayfield:Notify({Title = "GÀ GAMING ULTIMATE", Content = "Đã fix hết lỗi! Vợ farm vui vẻ nha ❤️", Duration = 5})
